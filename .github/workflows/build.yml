@@ -1,0 +1,30 @@
+name: Build (Windows)
+
+# main.cpp yig'iladi va JammHost.exe "Artifacts" ga yuklanadi.
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: MSVC muhitini tayyorlash
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Yig'ish
+        shell: cmd
+        run: build.bat
+
+      - name: JammHost.exe ni yuklash
+        uses: actions/upload-artifact@v4
+        with:
+          name: JammHost-win-x64
+          path: JammHost.exe
+          if-no-files-found: error
+          retention-days: 30
